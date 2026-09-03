@@ -3,18 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# =========================
-# SETTINGS
-# =========================
+
 
 app.secret_key = "my_secret_key"
 
-# Основная база — пользователи
+
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     "sqlite:///C:/Users/kharc/PyCharmMiscProject/users.db"
 )
 
-# Дополнительная база — товары
 app.config["SQLALCHEMY_BINDS"] = {
     "products": "sqlite:///C:/Users/kharc/PyCharmMiscProject/project.db"
 }
@@ -116,7 +113,7 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # Проверяем пользователя в users.db
+       
         existing_user = Users.query.filter_by(
             user=username
         ).first()
@@ -128,7 +125,7 @@ def register():
                 error="Такой пользователь уже существует"
             )
 
-        # Создаём пользователя
+      
         new_user = Users(
             user=username,
             password=password
@@ -144,9 +141,7 @@ def register():
     return render_template("register.html")
 
 
-# =========================
-# PRODUCTS
-# =========================
+
 
 @app.route("/products")
 def products():
@@ -154,7 +149,6 @@ def products():
     if "username" not in session:
         return redirect("/login")
 
-    # Получаем товары из project.db
     all_products = Product.query.all()
 
     return render_template(
@@ -173,9 +167,7 @@ def product_details(product_id):
         "product_details.html",
         product=product
     )
-# =========================
-# LOGOUT
-# =========================
+
 
 @app.route("/logout")
 def logout():
@@ -185,9 +177,6 @@ def logout():
     return redirect("/login")
 
 
-# =========================
-# START
-# =========================
 
 if __name__ == "__main__":
 
